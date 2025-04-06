@@ -1,0 +1,79 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: "Poppins", Arial, sans-serif; /* Font modern */
+    background: whitesmoke;
+    display: flex;
+    height: 100vh; /* Tinggi layar penuh */
+}
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    flex-direction: column; /* Tata vertikal */
+    width: 16%; /* Lebar ramping untuk tampilan modern */
+    height: 100vh; /* Tinggi penuh */
+    background: linear-gradient(to bottom, #7ce8ff, #0080bf);
+    backdrop-filter: blur(12px); /* Blur untuk glassmorphism */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Bayangan halus untuk kedalaman */
+    border-right: 1px solid rgba(255, 255, 255, 0.2); /* Garis pembatas transparan */
+    padding-top: 40px; /* Spasi atas */
+    position: fixed; /* Posisi tetap di kiri layar */
+}
+
+/* Link Styles */
+.navbar a {
+    display: flex;
+    align-items: center; /* Ikon dan teks sejajar secara vertikal */
+    color: #fff; /* Warna teks putih untuk kontras */
+    text-decoration: none; /* Hilangkan garis bawah pada tautan */
+    margin: 10px 20px; /* Spasi di sekitar tautan */
+    padding: 12px 20px; /* Area klik yang nyaman */
+    border-radius: 12px; /* Sudut membulat untuk tampilan modern */
+    transition: all 0.4s ease-in-out; /* Efek hover yang halus */
+    font-size: 16px;
+}
+
+.navbar a i {
+    margin-right: 4px; /* Jarak antara ikon dan teks */
+    font-size: 20px; /* Ukuran ikon sedikit lebih besar dari teks */
+}
+
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.4); /* Efek hover semi-transparan */
+    transform: translateX(10px); /* Efek geser pada hover */
+    color: black;
+}
+
+.navbar a.active {
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.4
+    ); /* Warna lebih terang untuk tautan aktif */
+}
+
+/* Branding Section (Optional) */
+.navbar .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.navbar .brand img {
+    width: 50px; /* Ukuran logo kecil dan elegan */
+}
+
+.navbar .brand h1 {
+    color: #fff;
+    font-size: 20px;
+}
+
+/* Main Content Styles */
+.main {
+    flex-grow: 1;
+    margin-left: 16%; /* Offset untuk menyesuaikan lebar navbar */
+    padding: 40px;
+}
