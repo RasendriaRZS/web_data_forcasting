@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class AssetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::all();
+        // Ambil status dari query string
+        $status = $request->get('status');
+
+        // Jika status dipilih, filter data berdasarkan status
+        if ($status) {
+            $assets = Asset::where('status', $status)->get();
+        } else {
+            // Ambil semua data jika tidak ada filter
+            $assets = Asset::all();
+        }
+
         return view('assets.index', compact('assets'));
     }
 
@@ -27,6 +37,8 @@ class AssetController extends Controller
             'model' => 'required',
             'status' => 'required', // Validasi status
             'purchase_date' => 'required|date',
+            'delivery_date' => 'nullable|date',
+            'notes' => 'nullable|string',
         ]);
 
         // Simpan data ke database termasuk status
@@ -45,20 +57,20 @@ class AssetController extends Controller
     {
         // Validasi input termasuk status
         $request->validate([
-            'serial_number' => 'required|unique:assets',
+            'serial_number' => 'required|unique:assets,serial_number,' . $asset->id,
             'name' => 'required',
             'model' => 'required',
-            'status' => 'required',
+            'status' => 'required', // Validasi status
             'purchase_date' => 'required|date',
             'delivery_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
-    
-        // Simpan data ke database
-        Asset::create($request->all());
-    
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('assets.index') ->with('success', 'Asset created successfully.');
+
+        // Update data termasuk status
+        $asset->update($request->all());
+
+        return redirect()->route('assets.index')
+            ->with('success', 'Asset updated successfully');
     }
 
     public function destroy(Asset $asset)

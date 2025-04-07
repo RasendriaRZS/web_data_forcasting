@@ -6,43 +6,45 @@
     <title>Create New Asset</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"> <!-- Bootstrap Icons -->
     <style>
-        /* Latar belakang halaman dengan animasi warna bergerak */
+        /* Latar belakang dengan warna netral */
         body {
             margin: 0;
-            height: 100vh;
-            background: transparent;
-        }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background-color: #f8f9fa; /* Warna latar belakang netral */
         }
 
         /* Desain modal */
         .modal-content {
             border-radius: 15px; /* Sudut yang lebih bulat */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Bayangan lembut */
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
             background-color: #ffffff; /* Latar belakang putih solid untuk form */
         }
 
-        /* Tombol close merah */
+        .modal-header {
+            border-bottom: none; /* Menghilangkan border bawah pada header modal */
+        }
+
+        .modal-title {
+            color: #007bff; /* Warna biru khas Bootstrap untuk judul */
+        }
+
+        /* Tombol close dengan ikon */
         .btn-close-red {
-            color: #ff0000; /* Warna merah untuk tombol X */
+            color: #dc3545; /* Warna merah untuk tombol X */
             background-color: transparent;
             border: none;
             font-size: 1.5rem; /* Ukuran font lebih besar */
         }
 
         .btn-close-red:hover {
-            color: #cc0000; /* Warna lebih gelap saat hover */
+            color: #c82333; /* Warna lebih gelap saat hover */
         }
 
         /* Label form */
         .form-label {
             font-weight: bold; /* Label tebal untuk penekanan */
-            color: #333; /* Warna label yang lebih gelap */
+            color: #495057; /* Warna label yang lebih gelap */
         }
 
         /* Tombol submit */
@@ -57,7 +59,7 @@
         }
 
         .modal-dialog {
-            max-width: 90%; /* Lebar maksimum modal lebih besar */
+            max-width: 50%; /* Lebar maksimum modal lebih besar */
         }
     </style>
 </head>
@@ -67,7 +69,7 @@
         <div class="modal-dialog"> <!-- Ukuran modal diatur di CSS -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="assetModalLabel">Create New Asset</h5>
+                    <h5 class="modal-title" id="assetModalLabel"><i class="bi bi-plus-circle"></i> Create New Asset</h5>
                     <!-- Tombol X Merah -->
                     <button type="button" class="btn-close-red" onclick="window.location.href='{{ route('assets.index') }}'" aria-label="Close">X</button>
                 </div>
@@ -75,61 +77,69 @@
                     <form method="POST" action="{{ route('assets.store') }}">
                         @csrf
 
-                        <!-- Serial Number -->
-                        <div class="mb-3">
-                            <label for="serial_number" class="form-label">Serial Number</label>
-                            <input type="text" name="serial_number" id="serial_number" class="form-control" required />
+                        <!-- Form Horizontal -->
+                        <div class="row mb-3">
+                            <!-- Serial Number -->
+                            <div class="col-md-6">
+                                <label for="serial_number" class="form-label">Serial Number</label>
+                                <input type="text" name="serial_number" id="serial_number" class="form-control shadow-sm" required />
+                            </div>
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" name="name" id="name" class="form-control shadow-sm" required />
+                            </div>
                         </div>
 
-                        <!-- Name -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" name="name" id="name" class="form-control" required />
+                        <div class="row mb-3">
+                            <!-- Model -->
+                            <div class="col-md-6">
+                                <label for="model" class="form-label">Model</label>
+                                <select name="model" id="model" class="form-select shadow-sm" required>
+                                    <option value="">Select Model</option>
+                                    <option value="Router">Router</option>
+                                    <option value="Firewall">Firewall</option>
+                                    <option value="Access Point">Access Point</option>
+                                    <option value="Accessories">Accessories</option>
+                                </select>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select name="status" id="status" class="form-select shadow-sm" required>
+                                    <option value="">Select Status</option>
+                                    <option value="In Project">In Project</option> 
+                                    <option value="Warehouse">Warehouse</option> 
+                                    <option value="Maintenance">Maintenance</option> 
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- Model -->
-                        <div class="mb-3">
-                            <label for="model" class="form-label">Model</label>
-                            <select name="model" id="model" class="form-select" required>
-                                <option value="">Select Model</option>
-                                <option value="Router">Router</option>
-                                <option value="Firewall">Firewall</option>
-                                <option value="Access Point">Access Point</option>
-                                <option value="Accessories">Accessories</option>
-                            </select>
-                        </div>
+                        <!-- Purchase Date & Delivery Date -->
+                        <div class = "row mb-3">
+                            <!-- Purchase Date -->
+                            <div class = "col-md-6">
+                                <label for = "purchase_date", class = "form-label">Purchase Date</label> 
+                                <input type = "date", name = "purchase_date", id = "purchase_date", class = "form-control shadow-sm", required/>
+                            </div>
 
-                           <!-- Status -->
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select name="status" id="status" class="form-select" required>
-                                <option value="">Select Status</option>
-                                <option value="In Project">In Project</option> <!-- Opsi baru -->
-                                <option value="Warehouse">Warehouse</option> <!-- Opsi baru -->
-                                <option value="Maintenance">Maintenance</option> <!-- Opsi sebelumnya -->
-                            </select>
-                        </div>
-
-                        <!-- Purchase Date -->
-                        <div class="mb-3">
-                            <label for="purchase_date" class="form-label">Purchase Date</label>
-                            <input type="date" name="purchase_date" id="purchase_date" class="form-control" required />
-                        </div>
-
-                        <!-- Delivery Date -->
-                        <div class="mb-3">
-                            <label for="delivery_date" class="form-label">Delivery Date (Optional)</label>
-                            <input type="date" name="delivery_date" id="delivery_date" class="form-control" />
+                            <!-- Delivery Date -->
+                            <div class = "col-md-6">
+                                <label for = "delivery_date", class = "form-label">Delivery Date (Optional)</label> 
+                                <input type = "date", name = "delivery_date", id = "delivery_date", class = "form-control shadow-sm"/>
+                            </div>
                         </div>
 
                         <!-- Notes -->
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Notes (Optional)</label>
-                            <textarea name="notes" id="notes" rows="3" class="form-control"></textarea>
+                        <div class = "mb-3">
+                            <label for = "notes", class = "form-label">Notes (Optional)</label> 
+                            <textarea name = "notes", id = "notes", rows = "3", class = "form-control shadow-sm"></textarea> 
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary w-100">Submit</button> <!-- Tombol lebar penuh -->
+                        <button type = "submit", class = "btn btn-primary w-100 shadow-sm"><i class='bi bi-check-circle'></i> Submit</button>
 
                     </form>
                 </div>
