@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnalyticsController;
 
+// asset 
+use App\Http\Controllers\AssetController;
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,3 +33,7 @@ Route::get('/analytics', [AnalyticsController::class, 'analytics'])->name('analy
 Route::get('/services', function () {
     return view('services');
 })->name('settings');
+
+
+// asset 
+Route::resource('assets', AssetController::class);

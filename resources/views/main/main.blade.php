@@ -16,7 +16,8 @@
     {{-- CSS  --}}
     <link rel="stylesheet" href="css/navbar.css">
 
-    
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> 
 {{-- 
@@ -43,8 +44,12 @@
         <h1>Brand</h1>
     </div>
     <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">
-        <i class="fas fa-home"></i> Home
+        <i class="fas fa-home"></i> Dashboard
     </a>
+    <a href="{{ route('assets.index') }}" class="{{ request()->is('assets') ? 'active' : '' }}">
+      <i class="fas fa-cogs"></i> Asset
+  </a>    
+  </a>
     <a href="/analytics" class="{{ request()->is('analytics') ? 'active' : '' }}">
         <i class="fas fa-chart-bar"></i> Analytics
     </a>
@@ -77,6 +82,7 @@
     </script>
 
 {{-- javascript --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="..."></script> 
   </body>
 
