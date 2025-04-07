@@ -4,8 +4,24 @@
 <div class="container mt-5 custom-container">
     <h1 class="mb-4">Asset Management</h1>
 
-    <div class="mb-5">
-        <a href="{{ route('assets.create') }}" class="btn btn-primary">Create New Asset</a>
+    <!-- Tombol dan Filter Sejajar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Tombol Create New Asset -->
+        <a href="{{ route('assets.create') }}" class="btn btn-primary d-flex align-items-center" style="gap: 5px;">
+            <i class="bi bi-plus-circle"></i> <!-- Ikon Plus -->
+            Create New Asset
+        </a>
+
+        <!-- Form Filter -->
+        <form method="GET" action="{{ route('assets.index') }}" class="d-flex">
+            <select name="status" class="form-select me-2" onchange="this.form.submit()">
+                <option value="">All Asset</option>
+                <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
+                <option value="Warehouse" {{ request('status') == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
+                <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
+            </select>
+            <button type="submit" class="btn btn-outline-secondary">Filter</button>
+        </form>
     </div>
 
     @if(session('success'))
@@ -14,18 +30,10 @@
         </div>
     @endif
 
-    <!-- Form Filter -->
-    <form method="GET" action="{{ route('assets.index') }}" class="mb-4">
-        <div class="input-group">
-            <select name="status" class="form-select" onchange="this.form.submit()">
-                <option value="">All Asset</option>
-                <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
-                <option value="Warehouse" {{ request('status') == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
-                <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
-            </select>
-            <button type="submit" class="btn btn-outline-secondary">Filter</button>
-        </div>
-    </form>
+    <!-- Menampilkan Jumlah Aset -->
+    <div class="mb-3">
+        <strong>Total Assets: {{ $assets->count() }}</strong>
+    </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
