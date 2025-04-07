@@ -99,6 +99,17 @@
                             </select>
                         </div>
 
+                           <!-- Status -->
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status" class="form-select" required>
+                                <option value="">Select Status</option>
+                                <option value="In Project">In Project</option> <!-- Opsi baru -->
+                                <option value="Warehouse">Warehouse</option> <!-- Opsi baru -->
+                                <option value="Maintenance">Maintenance</option> <!-- Opsi sebelumnya -->
+                            </select>
+                        </div>
+
                         <!-- Purchase Date -->
                         <div class="mb-3">
                             <label for="purchase_date" class="form-label">Purchase Date</label>

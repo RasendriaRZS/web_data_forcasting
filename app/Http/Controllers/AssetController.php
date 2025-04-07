@@ -20,13 +20,16 @@ class AssetController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi input termasuk status
         $request->validate([
             'serial_number' => 'required|unique:assets',
             'name' => 'required',
             'model' => 'required',
+            'status' => 'required', // Validasi status
             'purchase_date' => 'required|date',
         ]);
 
+        // Simpan data ke database termasuk status
         Asset::create($request->all());
 
         return redirect()->route('assets.index')
@@ -40,17 +43,22 @@ class AssetController extends Controller
 
     public function update(Request $request, Asset $asset)
     {
+        // Validasi input termasuk status
         $request->validate([
-            'serial_number' => 'required|unique:assets,serial_number,'.$asset->id,
+            'serial_number' => 'required|unique:assets',
             'name' => 'required',
             'model' => 'required',
+            'status' => 'required',
             'purchase_date' => 'required|date',
+            'delivery_date' => 'nullable|date',
+            'notes' => 'nullable|string',
         ]);
-
-        $asset->update($request->all());
-
-        return redirect()->route('assets.index')
-            ->with('success', 'Asset updated successfully');
+    
+        // Simpan data ke database
+        Asset::create($request->all());
+    
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('assets.index') ->with('success', 'Asset created successfully.');
     }
 
     public function destroy(Asset $asset)
