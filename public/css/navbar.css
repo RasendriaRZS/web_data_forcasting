@@ -74,6 +74,5 @@ body {
 /* Main Content Styles */
 .main {
     flex-grow: 1;
-    margin-left: 16%; /* Offset untuk menyesuaikan lebar navbar */
     padding: 40px;
 }
