@@ -20,7 +20,11 @@ class AssetController extends Controller
             $assets = Asset::all();
         }
 
-        return view('assets.index', compact('assets'));
+         // Mengambil model yang berstatus "Maintenance"
+         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
+
+
+        return view('assets.index', compact('assets', 'maintenanceModels'));
     }
 
     public function create()

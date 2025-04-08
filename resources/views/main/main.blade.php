@@ -11,7 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins:500,600&display=swap' rel='stylesheet'> <!-- Font Ikonik -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/navbar.css"> <!-- CSS Kustom -->
-
 </head>
 <body>
 
@@ -41,7 +40,7 @@
 
     <!-- Area Notifikasi dan Profil -->
     <div class="profile-area">
-        <a href="#" class="me-3">
+        <a href="#" class="me-3" data-bs-toggle="modal" data-bs-target="#notificationModal">
             <i class="bi bi-bell-fill notification-icon"></i> <!-- Ikon Notifikasi -->
         </a>
 
@@ -57,6 +56,35 @@
 
 <div class="main">
     @yield('main')
+</div>
+
+<!-- Modal Notifikasi -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Header Modal -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel">Notifikasi</h5>
+        <!-- Tombol tutup X merah -->
+        <button type="button" class="btn-close text-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Body Modal -->
+      <div class="modal-body">
+        @if($maintenanceModels->isNotEmpty())
+            @foreach($maintenanceModels as $model)
+                <!-- Menampilkan nama model dan waktu pembuatan -->
+                <div class="notification-item mb-2">
+                    {{ $model->name }} - Dibuat pada: {{ $model->created_at->format('H:i') }}
+                </div>
+            @endforeach
+        @else
+            <!-- Jika tidak ada notifikasi -->
+            <p>Tidak ada notifikasi.</p>
+        @endif
+      </div>
+      {{-- Footer modal dihapus --}}
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>

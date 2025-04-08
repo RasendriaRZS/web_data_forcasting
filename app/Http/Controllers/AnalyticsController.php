@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Asset;
 use Illuminate\Http\Request;
 
 // buat ambit data dari table
@@ -84,7 +86,11 @@ class AnalyticsController extends Controller
             ->merge($probabilities->pluck('year'))
             ->sort();
 
-        return view('analytics', compact('data', 'probabilities', 'years'));
+         // Mengambil model yang berstatus "Maintenance"
+         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
+
+        
+        return view('analytics', compact('data', 'probabilities', 'years', 'maintenanceModels'));
 
     }
 }

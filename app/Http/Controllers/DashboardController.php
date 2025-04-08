@@ -19,6 +19,9 @@ class DashboardController extends Controller
                            ->groupBy('status')
                            ->pluck('count', 'status');
 
-        return view('index', compact('modelCounts', 'statusCounts'));
+        // Mengambil model yang berstatus "Maintenance"
+        $maintenanceModels = Asset::where('status', 'Maintenance')->orderBy('created_at', 'desc')->get();
+
+        return view('index', compact('modelCounts', 'statusCounts', 'maintenanceModels'));    
     }
 }
