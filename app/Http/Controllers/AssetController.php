@@ -23,7 +23,7 @@ class AssetController extends Controller
          // Mengambil model yang berstatus "Maintenance"
          $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
-
+        
         return view('assets.index', compact('assets', 'maintenanceModels'));
     }
 

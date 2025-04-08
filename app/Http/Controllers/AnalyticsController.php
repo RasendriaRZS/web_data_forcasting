@@ -89,7 +89,6 @@ class AnalyticsController extends Controller
          // Mengambil model yang berstatus "Maintenance"
          $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
-        
         return view('analytics', compact('data', 'probabilities', 'years', 'maintenanceModels'));
 
     }
