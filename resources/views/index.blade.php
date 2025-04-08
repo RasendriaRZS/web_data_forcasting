@@ -125,7 +125,7 @@ const config = {
     }
 };
 
-// Render chart
+// tampilin chart
 window.onload = function() {
     const ctx = document.getElementById('statusChart').getContext('2d');
     new Chart(ctx, config);
