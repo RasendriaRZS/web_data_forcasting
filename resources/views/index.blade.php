@@ -44,14 +44,14 @@
 
     <!-- Bagian Tengah -->
     <div class="row">
-        <!-- Bagian Kiri: Pie Chart -->
+        <!-- Pie Chart -->
         <div class="col-md-8">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Summary Asset</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Atur tinggi canvas dengan CSS -->
+                    <!-- Atur tinggi canvas -->
                     <canvas id="statusChart" style="max-height: 300px;"></canvas> 
                     
                     <!-- List Status -->
@@ -74,7 +74,7 @@
                     <h5 class="mb-0">Notifikasi</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Placeholder for notifications -->
+
                     <p>Fitur notifikasi dalam pengembangan.</p>
                 </div>
             </div>
