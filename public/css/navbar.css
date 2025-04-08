@@ -1,48 +1,52 @@
-/* Global Styles */
 body {
     margin: 0;
-    font-family: "Poppins", Arial, sans-serif; /* Font modern */
-    background: whitesmoke;
-    display: flex;
-    height: 100vh; /* Tinggi layar penuh */
+    background-color: #f8f9fa; /* Warna latar belakang netral */
 }
 
-/* Navbar Styles */
 .navbar {
     display: flex;
-    flex-direction: column; /* Tata vertikal */
-    width: 16%; /* Lebar ramping untuk tampilan modern */
-    height: 100vh; /* Tinggi penuh */
-    background: linear-gradient(to bottom, #7ce8ff, #0080bf);
-    backdrop-filter: blur(12px); /* Blur untuk glassmorphism */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Bayangan halus untuk kedalaman */
-    border-right: 1px solid rgba(255, 255, 255, 0.2); /* Garis pembatas transparan */
-    padding-top: 40px; /* Spasi atas */
-    position: fixed; /* Posisi tetap di kiri layar */
+    align-items: center;
+    justify-content: space-between;
+    background-color: #007bff; /* Warna navbar */
+    padding: 15px 20px; /* Jarak dalam navbar */
 }
 
-/* Link Styles */
-.navbar a {
+.navbar .brand {
     display: flex;
-    align-items: center; /* Ikon dan teks sejajar secara vertikal */
-    color: #fff; /* Warna teks putih untuk kontras */
-    text-decoration: none; /* Hilangkan garis bawah pada tautan */
-    margin: 10px 20px; /* Spasi di sekitar tautan */
-    padding: 12px 20px; /* Area klik yang nyaman */
-    border-radius: 12px; /* Sudut membulat untuk tampilan modern */
-    transition: all 0.4s ease-in-out; /* Efek hover yang halus */
-    font-size: 16px;
+    flex-direction: column; /* Mengatur teks menjadi vertikal */
+    align-items: center; /* Memusatkan teks */
+    margin-right: 50px; /* Memberikan jarak antara brand dan menu navbar */
 }
 
-.navbar a i {
-    margin-right: 4px; /* Jarak antara ikon dan teks */
-    font-size: 20px; /* Ukuran ikon sedikit lebih besar dari teks */
+.navbar h1 {
+    font-size: 24px; /* Ukuran font untuk nama brand */
+    color: white; /* Warna font untuk nama brand */
+    margin: 5px 0; /* Jarak atas dan bawah untuk nama brand */
+    font-family: "Poppins", sans-serif; /* Menggunakan font Poppins untuk tampilan ikonik */
+}
+
+.navbar h6 {
+    font-size: 12px; /* Ukuran font untuk deskripsi */
+    color: rgba(255, 255, 255, 0.8); /* Warna deskripsi */
+    font-style: italic; /* Menerapkan gaya italic pada deskripsi */
+}
+
+.divider {
+    height: 30px; /* Tinggi pemisah antara brand dan menu navbar */
+    border-left: 1px solid rgba(255, 255, 255, 0.5); /* Garis pemisah */
+    margin-left: 20px; /* Jarak dari brand */
+    margin-right: 20px; /* Jarak dari menu navbar */
+}
+
+.navbar a {
+    color: white; /* Warna link */
+    padding: 10px 15px; /* Jarak dalam link */
+    text-decoration: none; /* Menghilangkan garis bawah */
+    border-radius: 5px; /* Sudut yang lebih bulat untuk link */
 }
 
 .navbar a:hover {
-    background-color: rgba(255, 255, 255, 0.4); /* Efek hover semi-transparan */
-    transform: translateX(10px); /* Efek geser pada hover */
-    color: black;
+    background-color: rgba(255, 255, 255, 0.2); /* Efek hover pada link */
 }
 
 .navbar a.active {
@@ -50,29 +54,23 @@ body {
         255,
         255,
         255,
-        0.4
-    ); /* Warna lebih terang untuk tautan aktif */
+        0.3
+    ); /* Warna latar belakang untuk link aktif */
 }
 
-/* Branding Section (Optional) */
-.navbar .brand {
+.profile-area {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 40px;
+    color: white; /* Warna teks untuk nama akun */
+    margin-left: auto; /* Memindahkan area profil ke ujung kanan */
 }
 
-.navbar .brand img {
-    width: 50px; /* Ukuran logo kecil dan elegan */
+.profile-area i {
+    font-size: 24px; /* Ukuran ikon orang */
+    margin-right: 10px; /* Jarak antara ikon dan teks nama akun */
 }
 
-.navbar .brand h1 {
-    color: #fff;
-    font-size: 20px;
-}
-
-/* Main Content Styles */
-.main {
-    flex-grow: 1;
-    padding: 40px;
+.notification-icon {
+    font-size: 24px; /* Ukuran ikon notifikasi */
+    margin-right: 15px; /* Jarak antara ikon notifikasi dan ikon orang */
 }
