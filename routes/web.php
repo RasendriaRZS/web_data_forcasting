@@ -6,6 +6,8 @@ use App\Http\Controllers\AnalyticsController;
 // asset 
 use App\Http\Controllers\AssetController;
 
+// Dashborad 
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -24,9 +26,9 @@ use App\Http\Controllers\AssetController;
 //     return view('index');
 // });
 
-Route::get('/', function () {
-    return view('index');
-})->name('index');
+
+// Dashborad 
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
 Route::get('/analytics', [AnalyticsController::class, 'analytics'])->name('analytics');
 
@@ -37,3 +39,4 @@ Route::get('/services', function () {
 
 // asset 
 Route::resource('assets', AssetController::class);
+
