@@ -11,22 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins:500,600&display=swap' rel='stylesheet'> <!-- Font Ikonik -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"> <!-- CSS Kustom -->
-    <style>
-        .notification-icon {
-            position: relative;
-        }
-
-        .badge-notification {
-            position: absolute;
-            top: -5px;
-            right: -10px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            padding: 0.2rem 0.4rem;
-            font-size: 0.8rem;
-        }
-    </style>
 </head>
 <body>
 
@@ -81,19 +65,16 @@
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content shadow-lg border-0">
-            <!-- Header Modal -->
             <div class="modal-header bg-gradient-primary text-black">
                 <h5 class="modal-title d-flex align-items-center" id="notificationModalLabel">
                     <i class="bi bi-bell me-2"></i> Notifications
                 </h5>
                 <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <!-- Body Modal -->
             <div class="modal-body p-4">
                 @if($maintenanceModels->isNotEmpty())
                     <ul class="list-group list-group-flush">
-                        @foreach($maintenanceModels as $model)
-                            <!-- Item Notifikasi -->
+                        @foreach($maintenanceModels->sortByDesc('created_at') as $model) <!-- Mengurutkan berdasarkan waktu terbaru -->
                             <li class="list-group-item d-flex justify-content-between align-items-center border-bottom p-3 notification-item" style="background-color: #f8f9fa;">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-exclamation-circle-fill text-warning me-3" style="font-size: 1.5rem;"></i>
@@ -102,13 +83,10 @@
                                         <small class="text-muted d-block">Created at: {{ $model->created_at->format('d-m-Y H:i') }}</small>
                                     </div>
                                 </div>
-                                <!-- Tombol aksi -->
                                 <button class="btn btn-sm btn-outline-primary toggle-details" data-bs-target="#details-{{ $model->id }}">
                                     View
                                 </button>
                             </li>
-
-                            <!-- Detail Notifikasi -->
                             <div class="collapse" id="details-{{ $model->id }}">
                                 <div class="card card-body mt-2">
                                     <p><strong>Detail:</strong> {{ $model->serial_number ?? 'Not Available' }} - {{ $model->model ?? 'Not Available' }} - {{ $model->status ?? 'Not Available' }}</p>
@@ -120,7 +98,7 @@
                                             <span class="text-muted">Not Available</span>
                                         @endif
                                     </p>
-                                    <p><strong>Note:</strong> {{ $model->note ? $model->note : 'Not Available' }}</p>
+                                    <p><strong>Note:</strong> {{ $model->notes ?? 'Not Available' }}</p>
                                 </div>
                             </div>
                         @endforeach
