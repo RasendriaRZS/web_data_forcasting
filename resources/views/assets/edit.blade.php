@@ -71,7 +71,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="assetModalLabel"><i class="bi bi-pencil-fill"></i> Edit Asset</h5>
                     <!-- Tombol X Merah -->
-                    <button type="button" class="btn-close-red" onclick="window.location.href='{{ route('assets.index') }}'" aria-label="Close">X</button>
+                    <button type="button" class="btn-close-red" onclick="window.location.href='{{ route('assets.index')}}'" aria-label="Close">X</button>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="{{ route('assets.update', $asset->id) }}">
