@@ -40,3 +40,12 @@ Route::get('/services', function () {
 // asset 
 Route::resource('assets', AssetController::class);
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/dashboard', 'AssetController@index');
+    Route::resource('assets', 'AssetController');
+});
