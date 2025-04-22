@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 
 // buat ambit data dari table
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Http;
+
  
 use App\Models\History; // Import model History
+
 
 
 class AnalyticsController extends Controller
@@ -44,19 +48,38 @@ class AnalyticsController extends Controller
             });
 
         // ngitung future projections dari data yang udah diambil
-        $probabilities = collect();
-        if ($data->count() >= 2) {
-            $lastTwoYears = $data->sortByDesc('year')->take(2);
-            $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
+        // $probabilities = collect();
+        // if ($data->count() >= 2) {
+        //     $lastTwoYears = $data->sortByDesc('year')->take(2);
+        //     $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
             
-            $lastYear = $data->max('year');
-            for ($i = 1; $i <= 4; $i++) {
-                $year = $lastYear + $i;
-                $value = $data->last()['value'] * (1 + $growthRate);
-                $probabilities->push([
-                    'year' => $year,
-                    'value' => round($value, 2)
-                ]);
+        //     $lastYear = $data->max('year');
+        //     for ($i = 1; $i <= 4; $i++) {
+        //         $year = $lastYear + $i;
+        //         $value = $data->last()['value'] * (1 + $growthRate);
+        //         $probabilities->push([
+        //             'year' => $year,
+        //             'value' => round($value, 2)
+        //         ]);
+        //     }
+        // }
+
+
+
+        
+        // Prediksi dengan ARIMA via Python API
+        $probabilities = collect();
+        if ($data->isNotEmpty()) {
+            $response = Http::post('http://localhost:5000/arima-predict', [
+                'data' => $data->toArray(),
+                'periods' => 4
+            ]);
+            
+            if ($response->successful()) {
+                $probabilities = collect($response->json('predictions'));
+            } else {
+                // Fallback ke metode lama jika API error
+                $probabilities = $this->calculateFallbackPredictions($data);
             }
         }
 
@@ -70,5 +93,30 @@ class AnalyticsController extends Controller
         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
         return view('analytics', compact('data', 'probabilities', 'years', 'maintenanceModels'));
+    }
+
+    
+    private function calculateFallbackPredictions($data)
+    {
+        // Metode lama sebagai fallback
+        if ($data->count() >= 2) {
+            $lastTwoYears = $data->sortByDesc('year')->take(2);
+            $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
+            
+            $lastYear = $data->max('year');
+            $predictions = [];
+            
+            for ($i = 1; $i <= 4; $i++) {
+                $year = $lastYear + $i;
+                $value = $data->last()['value'] * (1 + $growthRate);
+                $predictions[] = [
+                    'year' => $year,
+                    'value' => round($value, 2)
+                ];
+            }
+            return collect($predictions);
+        }
+        
+        return collect();
     }
 }
