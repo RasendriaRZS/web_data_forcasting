@@ -16,80 +16,59 @@ class AnalyticsController extends Controller
 {
     public function analytics(Request $request)
     {
-        // $query = DB::table('histories');
+        
+        // ambil data dari assets
+        $query = DB::table('assets')
+            ->select(
+                DB::raw('YEAR(purchase_date) as year'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->groupBy('year')
+            ->orderBy('year');
 
-        // // Filter berdasarkan tahun awal dan akhir
-        // if ($request->has('start_year') && $request->start_year) {
-        //     $query->where('year', '>=', $request->start_year);
-        // }
-
-        // if ($request->has('end_year') && $request->end_year) {
-        //     $query->where('year', '<=', $request->end_year);
-        // }
-
-        // // Data historis
-        // $data = $query->select('year', 'value')->get();
-
-        // // Data probabilitas (ini contoh data dummy aja ya untuk tahun ke depan)
-        // $probabilities = collect([
-        //     ['year' => 2024, 'value' => 4500],
-        //     ['year' => 2025, 'value' => 5000],
-        //     ['year' => 2026, 'value' => 5200],
-        //     ['year' => 2027, 'value' => 5500],
-        // ]);
-
-        // // menggabungkan tahun untuk dropdown filter
-        // $years = DB::table('histories')
-        //     ->select('year')
-        //     ->distinct()
-        //     ->orderBy('year')
-        //     ->pluck('year')
-        //     ->merge($probabilities->pluck('year'));
-
-        // return view('analytics', compact('data', 'probabilities', 'years'));
-
-
-        // Ambil data historis dengan filter
-        $query = DB::table('histories');
-
+        // jika ada tahun awal dan tahun awal gak kosong maka ambil dari tahun awal
         if ($request->has('start_year') && $request->start_year) {
-            $query->where('year', '>=', $request->start_year);
+            $query->where(DB::raw('YEAR(purchase_date)'), '>=', $request->start_year);
         }
 
         if ($request->has('end_year') && $request->end_year) {
-            $query->where('year', '<=', $request->end_year);
+            $query->where(DB::raw('YEAR(purchase_date)'), '<=', $request->end_year);
         }
 
-        $data = $query->select('year', 'value')->get();
+        $data = $query->get()
+            ->map(function ($item) {
+                return [
+                    'year' => (int)$item->year,
+                    'value' => $item->count
+                ];
+            });
 
-        // Data probabilitas untuk tahun 2024-2027 (contoh dummy)
-        $probabilities = collect([
-            ['year' => 2024, 'value' => 4500],
-            ['year' => 2025, 'value' => 5000],
-            ['year' => 2026, 'value' => 5200],
-            ['year' => 2027, 'value' => 5500],
-        ]);
+        // ngitung future projections dari data yang udah diambil
+        $probabilities = collect();
+        if ($data->count() >= 2) {
+            $lastTwoYears = $data->sortByDesc('year')->take(2);
+            $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
+            
+            $lastYear = $data->max('year');
+            for ($i = 1; $i <= 4; $i++) {
+                $year = $lastYear + $i;
+                $value = $data->last()['value'] * (1 + $growthRate);
+                $probabilities->push([
+                    'year' => $year,
+                    'value' => round($value, 2)
+                ]);
+            }
+        }
 
-        // biar probabilities juga bisa di filter 
-        $probabilities = $probabilities->filter(function ($item) use ($request) {
-            return (!$request->start_year || $item['year'] >= $request->start_year) &&
-                   (!$request->end_year || $item['year'] <= $request->end_year);
-        });
-        
-
-        // Gabungkan tahun historis + probabilitas untuk dropdown filter
-        $years = DB::table('histories')
-            ->select('year')
-            ->distinct()
-            ->orderBy('year')
-            ->pluck('year')
+        // dropdown filter untuk tahun
+        $years = $data->pluck('year')
             ->merge($probabilities->pluck('year'))
+            ->unique()
             ->sort();
 
-         // Mengambil model yang berstatus "Maintenance"
-         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
+        // ambil data dari maintenance models
+        $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
         return view('analytics', compact('data', 'probabilities', 'years', 'maintenanceModels'));
-
     }
 }
