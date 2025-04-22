@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use Illuminate\Http\Request;
+use App\Models\Transaction;
 
 class AssetController extends Controller
 {
     public function index(Request $request)
     {
+
+        $assets = Asset::with('transactions')->latest()->get();
+
         // Ambil status dari query string
         $status = $request->get('status');
 
@@ -96,6 +100,13 @@ class AssetController extends Controller
         // Update data termasuk status
         $asset->update($request->all());
 
+        Transaction::create([
+            'serial_number' => $asset->serial_number,
+            'transaction_date' => now()->toDateString(),
+            'project_name' => $request->project_name ?? 'In Warehouse',
+        ]);
+
+
         return redirect()->route('assets.index')
             ->with('success', 'Asset updated successfully');
     }
@@ -106,4 +117,6 @@ class AssetController extends Controller
         return redirect()->route('assets.index')
             ->with('success', 'Asset deleted successfully');
     }
+    
+
 }

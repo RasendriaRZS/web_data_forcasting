@@ -24,4 +24,13 @@ class Asset extends Model
         'purchase_date' => 'date',
         'delivery_date' => 'date'
     ];
+
+
+    public function transactions()
+{
+    return $this->hasMany(Transaction::class, 'serial_number', 'serial_number');
 }
+
+}
+
+
