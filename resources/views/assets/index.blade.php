@@ -63,7 +63,7 @@
                            data-serial="{{ $asset->serial_number }}"
                            data-name="{{ $asset->name }}"
                            data-model="{{ $asset->model }}"
-                           data-history="-">
+                           data-history="{{ $asset->transactions->map(fn($t) => $t->transaction_date . ' - ' . $t->project_name)->implode('<br>') }}">
                             {{ $asset->serial_number }}
                         </a>
                     </td>
@@ -139,7 +139,7 @@
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
                   <div class="card-body">
                     <div class="fw-bold text-secondary mb-2"><i class="bi bi-clock-history"></i> History</div>
-                    <div id="detail-history" class="text-muted">-</div>
+                    <div id="detail-history" class="text-muted" style="white-space: pre-line;"></div>
                   </div>
                 </div>
               </div>
@@ -182,7 +182,7 @@
                 document.getElementById('detail-serial').textContent = this.getAttribute('data-serial');
                 document.getElementById('detail-name').textContent = this.getAttribute('data-name');
                 document.getElementById('detail-model').textContent = this.getAttribute('data-model');
-                document.getElementById('detail-history').textContent = this.getAttribute('data-history');
+                document.getElementById('detail-history').innerHTML = this.getAttribute('data-history');
             });
         });
     });

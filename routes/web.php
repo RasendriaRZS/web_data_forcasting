@@ -9,6 +9,9 @@ use App\Http\Controllers\AssetController;
 // Dashborad 
 use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\TransactionController;
+
+
 
 
 /*
@@ -40,6 +43,7 @@ Route::get('/services', function () {
 // asset 
 Route::resource('assets', AssetController::class);
 
+Route::resource('transactions', TransactionController::class)->only(['index', 'show', 'store', 'destroy']);
 
 // Auth::routes();
 
