@@ -12,7 +12,7 @@
         </a>
         <form method="GET" action="{{ route('assets.index') }}" class="d-flex" style="gap: 10px;">
             <input type="text" name="search" value="{{ request('search') }}" class="form-control me-2"
-                   placeholder="Search Serial Number, Name, Project Name">
+                   placeholder="Search">
             <select name="status" class="form-select me-2" onchange="this.form.submit()">
                 <option value="">All Asset</option>
                 <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
