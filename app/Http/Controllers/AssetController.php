@@ -12,6 +12,10 @@ class AssetController extends Controller
         // Ambil status dari query string
         $status = $request->get('status');
 
+        $search = $request->get('search');
+
+        $query = Asset::query();
+
         // Jika status dipilih, filter data berdasarkan status
         if ($status) {
             $assets = Asset::where('status', $status)->get();
@@ -20,18 +24,27 @@ class AssetController extends Controller
             $assets = Asset::all();
         }
 
-        $query = Asset::query();
 
         if ($status) {
             $query->where('status', $status);
         }
-    
+
+
+        // serach bar 
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('serial_number', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('project_name', 'like', "%{$search}%");
+            });
+        }
+        
+            
         $assets = $query->orderBy('updated_at', 'desc')->get();
 
          // Mengambil model yang berstatus "Maintenance"
          $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
-        
         return view('assets.index', compact('assets', 'maintenanceModels'));
     }
 

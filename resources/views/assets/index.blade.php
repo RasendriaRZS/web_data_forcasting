@@ -4,16 +4,18 @@
 <div class="container mt-5 custom-container">
     <h1 class="mb-4">Asset Management</h1>
 
-    <!-- Tombol dan Filter Sejajar -->
+    <!-- Tombol Create New Asset & Form Search/Filter -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Tombol Create New Asset -->
         <a href="{{ route('assets.create') }}" class="btn btn-primary d-flex align-items-center" style="gap: 5px;">
-            <i class="bi bi-plus-circle"></i> <!-- Ikon Plus -->
+            <i class="bi bi-plus-circle"></i>
             Create New Asset
         </a>
 
-        <!-- Form Filter -->
-        <form method="GET" action="{{ route('assets.index') }}" class="d-flex">
+        <!-- Form Search dan Filter Status -->
+        <form method="GET" action="{{ route('assets.index') }}" class="d-flex" style="gap: 10px;">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control me-2"
+                   placeholder="Search">
             <select name="status" class="form-select me-2" onchange="this.form.submit()">
                 <option value="">All Asset</option>
                 <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
@@ -21,6 +23,9 @@
                 <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
             </select>
             <button type="submit" class="btn btn-outline-secondary">Filter</button>
+            @if(request('search') || request('status'))
+                <a href="{{ route('assets.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
+            @endif
         </form>
     </div>
 
@@ -51,7 +56,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($assets as $asset)
+                @forelse($assets as $asset)
                 <tr>
                     <td>{{ $asset->serial_number }}</td>
                     <td>{{ $asset->name }}</td>
@@ -64,26 +69,24 @@
                     <td class="text-center">
                         <!-- Tombol Edit dengan Ikon Pensil -->
                         <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                            <i class="bi bi-pencil-fill"></i> <!-- Ikon Pensil -->
+                            <i class="bi bi-pencil-fill"></i>
                         </a>
-
                         <!-- Tombol Delete dengan Ikon Tong Sampah -->
                         <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                <i class="bi bi-trash-fill"></i> <!-- Ikon Tong Sampah -->
+                                <i class="bi bi-trash-fill"></i>
                             </button>
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="9" class="text-center">No assets found.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
-
-        @if($assets->isEmpty())
-            <tr><td colspan="9" class="text-center">No assets found.</td></tr>
-        @endif
     </div>
-
 @endsection
