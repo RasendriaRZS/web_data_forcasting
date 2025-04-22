@@ -103,7 +103,7 @@ class AssetController extends Controller
         Transaction::create([
             'serial_number' => $asset->serial_number,
             'transaction_date' => now()->toDateString(),
-            'project_name' => $request->project_name ?? 'Asset Updated',
+            'project_name' => $request->project_name ?? 'In Warehouse',
         ]);
 
 
