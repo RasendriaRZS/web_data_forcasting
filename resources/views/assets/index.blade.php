@@ -43,6 +43,7 @@
                     <th>Name</th>
                     <th>Model</th>
                     <th>Status</th>
+                    <th>Project Name</th>
                     <th>Purchase Date</th>
                     <th>Delivery Date</th>
                     <th>Notes</th>
@@ -56,6 +57,7 @@
                     <td>{{ $asset->name }}</td>
                     <td>{{ $asset->model }}</td>
                     <td>{{ $asset->status }}</td>
+                    <td>{{ $asset->project_name ?? '-' }}</td>
                     <td>{{ $asset->purchase_date }}</td>
                     <td>{{ $asset->delivery_date ?? '-' }}</td>
                     <td>{{ $asset->notes ?? '-' }}</td>
@@ -80,7 +82,7 @@
         </table>
 
         @if($assets->isEmpty())
-            <tr><td colspan="8" class="text-center">No assets found.</td></tr>
+            <tr><td colspan="9" class="text-center">No assets found.</td></tr>
         @endif
     </div>
 

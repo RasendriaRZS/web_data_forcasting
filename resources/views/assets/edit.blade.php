@@ -118,6 +118,14 @@
                             </div>
                         </div>
 
+                        {{-- project_name  --}}
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="project_name" class="form-label">Project Name (Optional)</label>
+                                <input type="text" name="project_name" id="project_name" class="form-control shadow-sm" value="{{ $asset->project_name }}" />
+                            </div>
+                        </div>
+
                         <!-- Purchase Date & Delivery Date -->
                         <div class = "row mb-3">
                             <!-- Purchase Date -->

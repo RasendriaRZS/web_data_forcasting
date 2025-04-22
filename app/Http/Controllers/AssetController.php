@@ -20,6 +20,14 @@ class AssetController extends Controller
             $assets = Asset::all();
         }
 
+        $query = Asset::query();
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+    
+        $assets = $query->orderBy('updated_at', 'desc')->get();
+
          // Mengambil model yang berstatus "Maintenance"
          $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
@@ -52,6 +60,7 @@ class AssetController extends Controller
             ->with('success', 'Asset created successfully.');
     }
 
+
     public function edit(Asset $asset)
     {
         return view('assets.edit', compact('asset'));
@@ -64,7 +73,8 @@ class AssetController extends Controller
             'serial_number' => 'required|unique:assets,serial_number,' . $asset->id,
             'name' => 'required',
             'model' => 'required',
-            'status' => 'required', // Validasi status
+            'status' => 'required', 
+            'project_name' => 'nullable|string|max:255',
             'purchase_date' => 'required|date',
             'delivery_date' => 'nullable|date',
             'notes' => 'nullable|string',
