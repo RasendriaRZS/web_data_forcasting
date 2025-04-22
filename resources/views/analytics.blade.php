@@ -2,7 +2,7 @@
 
 @section('main')
 <div class="container">
-    <h1>Analytics Overview</h1>
+    <h1>Analytics Overview Predicting Asset Needs</h1>
     
     <!-- Form Filter -->
     <form id="filterForm" method="GET" action="{{ route('analytics') }}">
