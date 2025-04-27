@@ -8,12 +8,8 @@ use Illuminate\Http\Request;
 
 // buat ambit data dari table
 use Illuminate\Support\Facades\DB;
-
-use Illuminate\Support\Facades\Http;
-
  
 use App\Models\History; // Import model History
-
 
 
 class AnalyticsController extends Controller
@@ -47,41 +43,8 @@ class AnalyticsController extends Controller
                 ];
             });
 
-        // ngitung future projections dari data yang udah diambil
-        // $probabilities = collect();
-        // if ($data->count() >= 2) {
-        //     $lastTwoYears = $data->sortByDesc('year')->take(2);
-        //     $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
-            
-        //     $lastYear = $data->max('year');
-        //     for ($i = 1; $i <= 4; $i++) {
-        //         $year = $lastYear + $i;
-        //         $value = $data->last()['value'] * (1 + $growthRate);
-        //         $probabilities->push([
-        //             'year' => $year,
-        //             'value' => round($value, 2)
-        //         ]);
-        //     }
-        // }
-
-
-
-        
-        // Prediksi dengan ARIMA via Python API
-        $probabilities = collect();
-        if ($data->isNotEmpty()) {
-            $response = Http::post('http://localhost:5000/arima-predict', [
-                'data' => $data->toArray(),
-                'periods' => 4
-            ]);
-            
-            if ($response->successful()) {
-                $probabilities = collect($response->json('predictions'));
-            } else {
-                // Fallback ke metode lama jika API error
-                $probabilities = $this->calculateFallbackPredictions($data);
-            }
-        }
+        // Calculate ARIMA predictions
+        $probabilities = $this->calculateARIMAPredictions($data);
 
         // dropdown filter untuk tahun
         $years = $data->pluck('year')
@@ -95,28 +58,50 @@ class AnalyticsController extends Controller
         return view('analytics', compact('data', 'probabilities', 'years', 'maintenanceModels'));
     }
 
-    
-    private function calculateFallbackPredictions($data)
+    private function calculateARIMAPredictions($data)
     {
-        // Metode lama sebagai fallback
-        if ($data->count() >= 2) {
-            $lastTwoYears = $data->sortByDesc('year')->take(2);
-            $growthRate = ($lastTwoYears->first()['value'] - $lastTwoYears->last()['value']) / $lastTwoYears->last()['value'];
-            
-            $lastYear = $data->max('year');
-            $predictions = [];
-            
-            for ($i = 1; $i <= 4; $i++) {
-                $year = $lastYear + $i;
-                $value = $data->last()['value'] * (1 + $growthRate);
-                $predictions[] = [
-                    'year' => $year,
-                    'value' => round($value, 2)
-                ];
-            }
-            return collect($predictions);
-        }
+        $predictions = collect();
         
-        return collect();
+        if ($data->count() < 2) {
+            return $predictions;
+        }
+
+        // Convert data to array of values
+        $values = $data->pluck('value')->toArray();
+        
+        // Calculate differences (d=1)
+        $differences = [];
+        for ($i = 1; $i < count($values); $i++) {
+            $differences[] = $values[$i] - $values[$i - 1];
+        }
+
+        // ARIMA parameters
+        $ar_coefficient = 0.6;  // AR coefficient (a)
+        $ma_coefficient = 0.4;  // MA coefficient (b)
+        $previous_error = 0.5;  // Previous error (eₜ₋₁)
+
+        // Calculate predictions for next 4 periods
+        $lastYear = $data->last()['year'];
+        $lastValue = $data->last()['value'];
+        $lastDifference = end($differences);
+
+        for ($i = 1; $i <= 4; $i++) {
+            // Calculate difference prediction
+            $differencePrediction = ($ar_coefficient * $lastDifference) + ($ma_coefficient * $previous_error);
+            
+            // Convert back to original scale
+            $predictedValue = $lastValue + $differencePrediction;
+            
+            // Update for next iteration
+            $lastDifference = $differencePrediction;
+            $lastValue = $predictedValue;
+            
+            $predictions->push([
+                'year' => $lastYear + $i,
+                'value' => round($predictedValue, 2)
+            ]);
+        }
+
+        return $predictions;
     }
 }
