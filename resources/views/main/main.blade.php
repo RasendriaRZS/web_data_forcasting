@@ -35,7 +35,7 @@
         <i class="bi bi-bar-chart"></i> Analytics
     </a>
     <a href="/Asset_Master" class="{{ request()->is('Asset_Master') ? 'active' : '' }}">
-        <i class="bi bi-gear"></i> Asset Master
+        <i class="bi bi-archive"></i> Asset Master
     </a>
 
     <!-- Area Notifikasi dan Profil -->
