@@ -125,21 +125,28 @@
                             </div>
                         </div>
 
-                        <!-- Purchase Date & Delivery Date -->
+                        <!-- Asset Received & Asset Shipped -->
                         <div class = "row mb-3">
-                            <!-- Purchase Date -->
+                            <!-- Asset Received -->
                             <div class = "col-md-6">
-                                <label for = "purchase_date", class = "form-label">Purchase Date</label> 
+                                <label for = "purchase_date", class = "form-label">Asset Received</label> 
                                 <input type = "date", name = "purchase_date", id = "purchase_date", class = "form-control shadow-sm", required/>
                             </div>
 
-                            <!-- Delivery Date -->
+                            <!-- Asset Shipped -->
                             <div class = "col-md-6">
-                                <label for = "delivery_date", class = "form-label">Delivery Date (Optional)</label> 
+                                <label for = "delivery_date", class = "form-label">Asset Shipped (Optional)</label> 
                                 <input type = "date", name = "delivery_date", id = "delivery_date", class = "form-control shadow-sm"/>
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="location" class="form-label">Location (Optional)</label>
+                                <input type="text" name="location" id="location" class="form-control shadow-sm" />
+                            </div>
+                        </div>
+                        
                         <!-- Notes -->
                         <div class = "mb-3">
                             <label for = "notes", class = "form-label">Notes (Optional)</label> 

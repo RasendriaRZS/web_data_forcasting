@@ -141,6 +141,14 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="location" class="form-label">Location (Optional)</label>
+                                <input type="text" name="location" id="location" class="form-control shadow-sm" />
+                            </div>
+                        </div>
+                        
+
                         <!-- Notes -->
                         <div class = "mb-3">
                             <label for = "notes", class = "form-label">Notes (Optional)</label> 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->date('purchase_date');
             $table->date('delivery_date')->nullable();
+            $table->text('location')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });

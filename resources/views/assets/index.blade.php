@@ -46,8 +46,9 @@
                     <th>Model</th>
                     <th>Status</th>
                     <th>Project Name</th>
-                    <th>Purchase Date</th>
-                    <th>Delivery Date</th>
+                    <th>Asset Received</th>
+                    <th>Asset Shipped</th>
+                    <th>Location</th>
                     <th>Notes</th>
                     <th>Actions</th>
                 </tr>
@@ -73,6 +74,7 @@
                     <td>{{ $asset->project_name ?? '-' }}</td>
                     <td>{{ $asset->purchase_date }}</td>
                     <td>{{ $asset->delivery_date ?? '-' }}</td>
+                    <td>{{ $asset->location ?? '-' }}</td>
                     <td>{{ $asset->notes ?? '-' }}</td>
                     <td class="text-center">
                         <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning btn-sm" title="Edit">

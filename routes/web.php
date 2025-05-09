@@ -11,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\TransactionController;
 
+// Asset Master
+use App\Http\Controllers\AssetMasterController;
 
 
 
@@ -72,3 +74,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('assets', App\Http\Controllers\AssetController::class);
     // Route::resource('analytics', App\Http\Controllers\AnalyticsController::class);
 });
+
+
+// Asset master 
+Route::resource('Asset_Master', AssetMasterController::class)->only(['index']);

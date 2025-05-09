@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Asset;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\AssetMaster;
 
 class AssetController extends Controller
 {
@@ -59,24 +61,40 @@ class AssetController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input termasuk status
         $request->validate([
             'serial_number' => 'required|unique:assets',
             'name' => 'required',
             'model' => 'required',
-            'status' => 'required', // Validasi status
+            'status' => 'required',
             'purchase_date' => 'required|date',
             'delivery_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
-
-        // Simpan data ke database termasuk status
-        Asset::create($request->all());
-
+    
+        // Simpan ke tabel assets (data aktif)
+        $asset = Asset::create($request->all());
+    
+        // Simpan/Update ke tabel asset_masters (data master, tidak pernah dihapus)
+        AssetMaster::firstOrCreate(
+            ['serial_number' => $request->serial_number],
+            [
+                'name' => $request->name,
+                'project_name' => $request->project_name,
+                'model' => $request->model,
+                'status' => $request->status,
+                'asset_recieved' => $request->purchase_date,
+                'asset_shipped' => $request->delivery_date,
+                'location' => $request->location ?? null,
+                'notes' => $request->notes,
+                'id_insert' => auth()->id() ?? null,
+                'date_insert' => now(),
+                'is_delete' => 0
+            ]
+        );
+    
         return redirect()->route('assets.index')
             ->with('success', 'Asset created successfully.');
     }
-
 
     public function edit(Asset $asset)
     {
@@ -94,6 +112,7 @@ class AssetController extends Controller
             'project_name' => 'nullable|string|max:255',
             'purchase_date' => 'required|date',
             'delivery_date' => 'nullable|date',
+            'location' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
 
@@ -106,6 +125,18 @@ class AssetController extends Controller
             'project_name' => $request->project_name ?? 'In Warehouse',
         ]);
 
+        AssetMaster::where('serial_number', $asset->serial_number)->update([
+            'name' => $request->name,
+            'project_name' => $request->project_name,
+            'model' => $request->model,
+            'status' => $request->status,
+            'asset_recieved' => $request->purchase_date,
+            'asset_shipped' => $request->delivery_date,
+            'location' => $request->location,
+            'notes' => $request->notes,
+            'id_update' => auth()->id() ?? null,
+            'date_update' => now(),
+        ]);
 
         return redirect()->route('assets.index')
             ->with('success', 'Asset updated successfully');

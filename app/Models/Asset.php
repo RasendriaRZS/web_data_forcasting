@@ -17,6 +17,7 @@ class Asset extends Model
         'project_name',
         'purchase_date',
         'delivery_date',
+        'location',
         'notes'
     ];
 

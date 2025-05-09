@@ -34,8 +34,8 @@
     <a href="/analytics" class="{{ request()->is('analytics') ? 'active' : '' }}">
         <i class="bi bi-bar-chart"></i> Analytics
     </a>
-    <a href="/services" class="{{ request()->is('settings') ? 'active' : '' }}">
-        <i class="bi bi-gear"></i> Settings
+    <a href="/Asset_Master" class="{{ request()->is('Asset_Master') ? 'active' : '' }}">
+        <i class="bi bi-gear"></i> Asset Master
     </a>
 
     <!-- Area Notifikasi dan Profil -->
