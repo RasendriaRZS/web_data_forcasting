@@ -11,6 +11,7 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins:500,600&display=swap' rel='stylesheet'> <!-- Font Ikonik -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"> <!-- CSS Kustom -->
+    
 </head>
 <body>
 
@@ -29,10 +30,10 @@
         <i class="bi bi-house"></i> Dashboard
     </a>
     <a href="{{ route('assets.index') }}" class="{{ request()->is('assets') ? 'active' : '' }}">
-        <i class="bi bi-cogs"></i> Asset
+        <i class="bi bi-box-seam"></i> Asset
     </a>    
     <a href="/analytics" class="{{ request()->is('analytics') ? 'active' : '' }}">
-        <i class="bi bi-bar-chart"></i> Analytics
+        <i class="bi bi-graph-up"></i> Analytics
     </a>
     <a href="/Asset_Master" class="{{ request()->is('Asset_Master') ? 'active' : '' }}">
         <i class="bi bi-archive"></i> Asset Master

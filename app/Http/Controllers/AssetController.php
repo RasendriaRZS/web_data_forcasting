@@ -47,6 +47,7 @@ class AssetController extends Controller
         
             
         $assets = $query->orderBy('updated_at', 'desc')->get();
+        
 
          // Mengambil model yang berstatus "Maintenance"
          $maintenanceModels = Asset::where('status', 'Maintenance')->get();

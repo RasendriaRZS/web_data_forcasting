@@ -30,6 +30,14 @@
         </span>
     </div>
 
+        <!-- Petunjuk Scroll -->
+    <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="text-muted" style="font-size:0.98rem;">
+            <i class="bi bi-arrow-right-circle me-1 animate-panah-kanan"></i>
+            Geser ke samping untuk melihat semua kolom tabel
+        </span>
+    </div>
+
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive rounded-4" style="overflow-x:auto;">

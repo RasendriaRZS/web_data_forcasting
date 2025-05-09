@@ -1,29 +1,34 @@
 @extends('main.main')
 
 @section('main')
-<div class="container mt-5 custom-container">
-    <h1 class="mb-4">Asset Management</h1>
+<div class="container py-5">
+    <h1 class="fw-bold mb-4" style="font-size:2.2rem;letter-spacing:0.01em;color:#1e293b;">
+        <i class="bi bi-box-seam me-2 text-primary"></i> Asset Management
+    </h1>
 
-    <!-- Tombol Create New Asset & Form Search/Filter -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="{{ route('assets.create') }}" class="btn btn-primary d-flex align-items-center" style="gap: 5px;">
-            <i class="bi bi-plus-circle"></i>
-            Create New Asset
-        </a>
-        <form method="GET" action="{{ route('assets.index') }}" class="d-flex" style="gap: 10px;">
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control me-2"
-                   placeholder="Search">
-            <select name="status" class="form-select me-2" onchange="this.form.submit()">
-                <option value="">All Asset</option>
-                <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
-                <option value="Warehouse" {{ request('status') == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
-                <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
-            </select>
-            <button type="submit" class="btn btn-outline-secondary">Filter</button>
-            @if(request('search') || request('status'))
-                <a href="{{ route('assets.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
-            @endif
-        </form>
+    <!-- Tombol Create dan Search/Filter -->
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col-md-3 col-12 mb-2 mb-md-0">
+            <a href="{{ route('assets.create') }}" class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm" style="font-size:1.08rem; border-radius: 0.8rem; min-width: 140px; max-width: 70%;">
+                <i class="bi bi-plus-circle"></i>
+                Create New Asset
+            </a>
+        </div>
+        <div class="col-md-9 col-12">
+            <form method="GET" action="{{ route('assets.index') }}" class="d-flex flex-wrap gap-2 align-items-center justify-content-md-end">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" style="max-width:180px;" placeholder="Search">
+                <select name="status" class="form-select" style="max-width:150px;" onchange="this.form.submit()">
+                    <option value="">All Asset</option>
+                    <option value="In Project" {{ request('status') == 'In Project' ? 'selected' : '' }}>In Project</option>
+                    <option value="Warehouse" {{ request('status') == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
+                    <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
+                </select>
+                <button type="submit" class="btn btn-outline-secondary">Filter</button>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('assets.index') }}" class="btn btn-outline-danger">Reset</a>
+                @endif
+            </form>
+        </div>
     </div>
 
     @if(session('success'))
@@ -34,71 +39,95 @@
 
     <!-- Menampilkan Jumlah Aset -->
     <div class="mb-3">
-        <strong>Total Assets: {{ $assets->count() }}</strong>
+        <span class="fw-semibold text-secondary" style="font-size:1.15rem;">
+            Total Assets: {{ $assets->count() }}
+        </span>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Name</th>
-                    <th>Model</th>
-                    <th>Status</th>
-                    <th>Project Name</th>
-                    <th>Asset Received</th>
-                    <th>Asset Shipped</th>
-                    <th>Location</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($assets as $asset)
-                <tr>
-                    <td>
-                        <a href="#"
-                           class="asset-detail-link sn-modern-link"
-                           data-bs-toggle="modal"
-                           data-bs-target="#assetDetailModal"
-                           data-serial="{{ $asset->serial_number }}"
-                           data-name="{{ $asset->name }}"
-                           data-model="{{ $asset->model }}"
-                           data-history="{{ $asset->transactions->map(fn($t) => $t->transaction_date . ' - ' . $t->project_name)->implode('<br>') }}">
-                            {{ $asset->serial_number }}
-                        </a>
-                    </td>
-                    <td>{{ $asset->name }}</td>
-                    <td>{{ $asset->model }}</td>
-                    <td>{{ $asset->status }}</td>
-                    <td>{{ $asset->project_name ?? '-' }}</td>
-                    <td>{{ $asset->purchase_date }}</td>
-                    <td>{{ $asset->delivery_date ?? '-' }}</td>
-                    <td>{{ $asset->location ?? '-' }}</td>
-                    <td>{{ $asset->notes ?? '-' }}</td>
-                    <td class="text-center">
-                        <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                            <i class="bi bi-pencil-fill"></i>
-                        </a>
-                        <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                <i class="bi bi-trash-fill"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="9" class="text-center">No assets found.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <!-- Petunjuk Scroll -->
+    <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="text-muted" style="font-size:0.98rem;">
+            <i class="bi bi-arrow-right-circle me-1 animate-panah-kanan"></i>
+            Geser ke samping untuk melihat semua kolom tabel
+        </span>
     </div>
 
-    {{-- modal pop up  --}}
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive rounded-4" style="overflow-x:auto;">
+                <table class="table align-middle mb-0 table-striped" style="font-size:1.07rem;min-width:1100px;">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="min-width:140px;">Serial Number</th>
+                            <th style="min-width:120px;">Name</th>
+                            <th style="min-width:110px;">Model</th>
+                            <th style="min-width:120px;">Status</th>
+                            <th style="min-width:150px;">Project Name</th>
+                            <th style="min-width:140px;">Asset Received</th>
+                            <th style="min-width:140px;">Asset Shipped</th>
+                            <th style="min-width:120px;">Location</th>
+                            <th style="min-width:160px;">Notes</th>
+                            <th style="min-width:120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($assets as $asset)
+                        <tr>
+                            <td>
+                                <a href="#"
+                                   class="asset-detail-link sn-modern-link"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#assetDetailModal"
+                                   data-serial="{{ $asset->serial_number }}"
+                                   data-name="{{ $asset->name }}"
+                                   data-model="{{ $asset->model }}"
+                                   data-history="{{ $asset->transactions->map(fn($t) => $t->transaction_date . ' - ' . $t->project_name)->implode('<br>') }}">
+                                    {{ $asset->serial_number }}
+                                </a>
+                            </td>
+                            <td>{{ $asset->name }}</td>
+                            <td>
+                                <span class="badge bg-light text-dark border border-1 px-3 py-2 shadow-sm">{{ $asset->model }}</span>
+                            </td>
+                            <td>
+                                @if(strtolower($asset->status) == 'maintenance')
+                                    <span class="badge bg-danger text-white px-3 py-2 shadow-sm">{{ $asset->status }}</span>
+                                @else
+                                    <span class="badge bg-info text-dark px-3 py-2 shadow-sm">{{ $asset->status }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $asset->project_name ?? '-' }}</td>
+                            <td>{{ $asset->purchase_date }}</td>
+                            <td>{{ $asset->delivery_date ?? '-' }}</td>
+                            <td>{{ $asset->location ?? '-' }}</td>
+                            <td class="text-truncate" style="max-width: 160px;" title="{{ $asset->notes }}">{{ $asset->notes ?? '-' }}</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('assets.edit', $asset->id) }}" class="btn btn-warning btn-sm px-3" title="Edit">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm px-3" title="Delete" onclick="return confirm('Are you sure?')">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" class="text-center">No assets found.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pop Up Detail -->
     <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-labelledby="assetDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg border-0" style="border-radius: 18px;">
@@ -153,7 +182,6 @@
       </div>
     </div>
 
-    <!-- CSS Modern untuk Serial Number -->
     <style>
     .sn-modern-link {
         color: #2563eb;
@@ -169,13 +197,34 @@
         outline: none;
         text-decoration: none !important;
     }
-    /* Modal backdrop blur */
-    .modal-backdrop.show {
-        backdrop-filter: blur(2px);
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f8fafc;
+    }
+    .badge {
+        font-size: .97rem;
+        font-weight: 500;
+        letter-spacing: .01em;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+        padding-top: 1.05rem;
+        padding-bottom: 1.05rem;
+    }
+    .btn-sm {
+        font-size: 1rem;
+        padding: 0.35rem 0.7rem;
+        border-radius: 0.5rem;
+    }
+    /* Animasi panah scroll */
+    .animate-panah-kanan {
+        animation: panah-kanan 1.2s infinite alternate;
+    }
+    @keyframes panah-kanan {
+        0% { transform: translateX(0); opacity: 0.7;}
+        100% { transform: translateX(12px); opacity: 1;}
     }
     </style>
 
-    <!-- Script untuk isi modal dinamis -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         var detailLinks = document.querySelectorAll('.asset-detail-link');
