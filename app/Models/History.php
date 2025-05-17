@@ -8,5 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class History extends Model
 {
     protected $table = 'histories'; // Nama tabel di database
-    protected $fillable = ['year', 'value']; // Kolom yang bisa diisi
+    protected $fillable = [
+        'year',
+        'value',
+        'asset_id',
+        'action',
+        'description',
+        'user_id',
+    ];
 }

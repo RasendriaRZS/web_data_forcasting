@@ -32,6 +32,12 @@ class Asset extends Model
     return $this->hasMany(Transaction::class, 'serial_number', 'serial_number');
 }
 
+public function histories()
+{
+    return $this->hasMany(History::class);
+}
+
+
 }
 
 

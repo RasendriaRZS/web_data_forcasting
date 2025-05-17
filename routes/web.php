@@ -77,4 +77,13 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 // Asset master 
-Route::resource('Asset_Master', AssetMasterController::class)->only(['index']);
+// Route::resource('Asset_Master', AssetMasterController::class)->only(['index']);
+
+Route::get('assets/{asset}/detail', [AssetController::class, 'detail'])->name('assets.detail');
+Route::resource('Asset_Master', AssetMasterController::class)->only(['index', 'show']);
+
+
+// mevement transaction 
+// Route::get('assets/{asset}/detail', [AssetController::class, 'detail'])->name('assets.detail');
+
+Route::resource('assets', AssetController::class);

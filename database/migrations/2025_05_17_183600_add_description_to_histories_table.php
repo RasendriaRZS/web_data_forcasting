@@ -11,17 +11,11 @@ return new class extends Migration
      *
      * @return void
      */
-
-    // baru di buat struktur DB  
     public function up()
     {
-        Schema::create('histories', function (Blueprint $table) {
-            $table->id();
-            $table->integer('year'); // Tipe data integer untuk tahun
-            $table->integer('value'); // Nilai histori database
-            $table->timestamps();
+        Schema::table('histories', function (Blueprint $table) {
+        $table->string('description')->nullable();
         });
-        
     }
 
     /**
@@ -31,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('histories');
+         Schema::table('histories', function (Blueprint $table) {
+        $table->dropColumn('description');
+    });
     }
 };

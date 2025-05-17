@@ -74,16 +74,7 @@
                         @forelse($assets as $asset)
                         <tr>
                             <td>
-                                <a href="#"
-                                   class="asset-detail-link sn-modern-link"
-                                   data-bs-toggle="modal"
-                                   data-bs-target="#assetDetailModal"
-                                   data-serial="{{ $asset->serial_number }}"
-                                   data-name="{{ $asset->name }}"
-                                   data-model="{{ $asset->model }}"
-                                   data-history="{{ $asset->transactions->map(fn($t) => $t->transaction_date . ' - ' . $t->project_name)->implode('<br>') }}">
-                                    {{ $asset->serial_number }}
-                                </a>
+                                <a href="{{ route('assets.detail', $asset->id) }}" class="sn-modern-link">{{ $asset->serial_number }}</a>
                             </td>
                             <td>{{ $asset->name }}</td>
                             <td>
@@ -128,7 +119,7 @@
     </div>
 
     <!-- Modal Pop Up Detail -->
-    <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-labelledby="assetDetailModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-labelledby="assetDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg border-0" style="border-radius: 18px;">
           <div class="modal-header bg-primary bg-gradient text-white" style="border-top-left-radius: 18px; border-top-right-radius: 18px;">
@@ -180,7 +171,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <style>
     .sn-modern-link {

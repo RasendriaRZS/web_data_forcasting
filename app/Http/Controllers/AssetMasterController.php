@@ -6,7 +6,6 @@ use App\Models\AssetMaster;
 use Illuminate\Http\Request;
 use App\Models\Asset;
 
-
 class AssetMasterController extends Controller
 {
     public function index(Request $request)
@@ -23,9 +22,24 @@ class AssetMasterController extends Controller
 
         $assets = $query->where('is_delete', 0)->orderBy('updated_at', 'desc')->paginate(15);
 
-        // Tambahkan ini untuk mengirim data maintenance ke view
+        // Untuk notifikasi maintenance
         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
-        return view('Asset_Master', compact('assets', 'maintenanceModels'));
+        // Gunakan view dengan folder index
+         return view('Asset_Master', compact('assets', 'maintenanceModels'));
+
+
     }
+
+    public function show(AssetMaster $asset_master)
+    {
+        // Pastikan data ditemukan, jika tidak akan otomatis 404 karena route model binding
+         return view('Asset_Master', compact('assets', 'maintenanceModels'));
+
+    }
+
+    public function asset()
+{
+    return $this->hasOne(Asset::class, 'serial_number', 'serial_number');
+}
 }

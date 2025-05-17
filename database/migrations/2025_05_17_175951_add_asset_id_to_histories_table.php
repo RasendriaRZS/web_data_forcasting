@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-            // Cek dulu, hanya tambahkan kolom jika belum ada
-    if (!Schema::hasColumn('assets', 'location')) {
-        Schema::table('assets', function (Blueprint $table) {
-            $table->string('location')->nullable()->after('delivery_date');
-        });
-    }
+         Schema::table('histories', function (Blueprint $table) {
+        $table->unsignedBigInteger('asset_id')->after('id');
+    });
     }
 
     /**
@@ -28,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('assets', function (Blueprint $table) {
-            $table->dropColumn('location');
+        Schema::table('histories', function (Blueprint $table) {
+            //
         });
     }
 };

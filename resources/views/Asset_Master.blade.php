@@ -64,9 +64,9 @@
                                 {{ ($assets->currentPage() - 1) * $assets->perPage() + $loop->iteration }}
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border border-1 shadow-sm" style="font-family:'JetBrains Mono',monospace;font-size:1rem;">
-                                    {{ $asset->serial_number }}
-                                </span>
+                                <a href="{{ route('assets.detail', $asset->id) }}" class="sn-modern-link badge bg-light text-dark border border-1 shadow-sm" style="font-family:'JetBrains Mono',monospace;font-size:1rem;">
+    {{ $asset->serial_number }}
+</a>
                             </td>
 
                             <td class="fw-medium">{{ $asset->name }}</td>
