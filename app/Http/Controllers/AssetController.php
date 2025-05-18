@@ -112,7 +112,26 @@ class AssetController extends Controller
             'location' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
+
         
+        
+        // Simpan serial number lama sebelum update
+        $oldSerialNumber = $asset->serial_number;
+
+         // Update asset master, termasuk serial_number jika berubah
+        AssetMaster::where('serial_number', $oldSerialNumber)->update([
+            'serial_number'   => $request->serial_number,
+            'name'            => $request->name,
+            'project_name'    => $request->project_name,
+            'model'           => $request->model,
+            'status'          => $request->status,
+            'asset_recieved'  => $request->purchase_date,
+            'asset_shipped'   => $request->delivery_date,
+            'location'        => $request->location,
+            'notes'           => $request->notes,
+            'id_update'       => auth()->id() ?? null,
+            'date_update'     => now(),
+        ]);
 
         $asset->update($request->all());
 
@@ -122,28 +141,36 @@ class AssetController extends Controller
             'project_name' => $request->project_name ?? 'In Warehouse',
         ]);
 
-        AssetMaster::where('serial_number', $asset->serial_number)->update([
-            'name' => $request->name,
-            'project_name' => $request->project_name,
-            'model' => $request->model,
-            'status' => $request->status,
-            'asset_recieved' => $request->purchase_date,
-            'asset_shipped' => $request->delivery_date,
-            'location' => $request->location,
-            'notes' => $request->notes,
-            'id_update' => auth()->id() ?? null,
-            'date_update' => now(),
-        ]);
+        // AssetMaster::where('serial_number', $asset->serial_number)->update([
+        //     'name' => $request->name,
+        //     'project_name' => $request->project_name,
+        //     'model' => $request->model,
+        //     'status' => $request->status,
+        //     'asset_recieved' => $request->purchase_date,
+        //     'asset_shipped' => $request->delivery_date,
+        //     'location' => $request->location,
+        //     'notes' => $request->notes,
+        //     'id_update' => auth()->id() ?? null,
+        //     'date_update' => now(),
+        // ]);
 
         // Catat history update
-        History::create([
-            'year'        => now()->year,
-            'value'       => $asset->value ?? 0,
-            'asset_id'    => $asset->id,
-            'action'      => 'update',
-            'description' => 'Status: ' . $asset->status . ' | Notes: ' . ($asset->notes ?? '-') . ' | Project: ' . ($asset->project_name ?? '-'),
-            'user_id'     => auth()->id(),
-        ]);
+        // History::create([
+        //     'year'        => now()->year,
+        //     'value'       => $asset->value ?? 0,
+        //     'asset_id'    => $asset->id,
+        //     'action'      => 'update',
+        //     'description' => 'Status: ' . $asset->status . ' | Notes: ' . ($asset->notes ?? '-') . ' | Project: ' . ($asset->project_name ?? '-'),
+        //     'user_id'     => auth()->id(),
+        // ]);
+                History::create([
+                'year'        => now()->year,
+                'value'       => $asset->value ?? 0,
+                'asset_id'    => $asset->id,
+                'action'      => 'update', // atau 'delete'
+                'description' => 'Status: ' . $asset->status . ' | Notes: ' . ($asset->notes ?? '-') . ' | Project: ' . ($asset->project_name ?? '-'),
+                'user_id'     => auth()->id(),
+            ]);
 
         return redirect()->route('assets.index')
             ->with('success', 'Asset updated successfully');
@@ -157,39 +184,89 @@ class AssetController extends Controller
         $asset->delete();
 
         // Catat history delete
-        History::create([
-            'year'        => now()->year,
-            'value'       => $someValue,
-            'asset_id'    => $assetId,
-            'action'      => 'delete',
-            'description' => 'Asset deleted',
-            'user_id'     => auth()->id(),
-        ]);
+        // History::create([
+        //     'year'        => now()->year,
+        //     'value'       => $someValue,
+        //     'asset_id'    => $assetId,
+        //     'action'      => 'delete',
+        //     'description' => 'Asset deleted',
+        //     'user_id'     => auth()->id(),
+        // ]);
+            History::create([
+                'year'        => now()->year,
+                'value'       => $asset->value ?? 0,
+                'asset_id'    => $asset->id,
+                'action'      => 'delete', // atau 'delete'
+                'description' => 'Status: ' . $asset->status . ' | Notes: ' . ($asset->notes ?? '-') . ' | Project: ' . ($asset->project_name ?? '-'),
+                'user_id'     => auth()->id(),
+            ]);
 
         return redirect()->route('assets.index')
             ->with('success', 'Asset deleted successfully');
     }
 
     // movement asset 
-    public function detail(Asset $asset)
-    {
-        $updateCount = History::where('asset_id', $asset->id)->where('action', 'update')->count();
-        $deleteCount = History::where('asset_id', $asset->id)->where('action', 'delete')->count();
-        $histories = History::where('asset_id', $asset->id)->orderBy('created_at', 'desc')->get();
-        $dateInsert = $histories->where('action', 'insert')->first()->created_at ?? $asset->created_at;
-        $dateDelete = $histories->where('action', 'delete')->first()->created_at ?? null;
-        $locationStatus = $asset->location;
+    // public function detail(Asset $asset)
+    // {
+    //     $updateCount = History::where('asset_id', $asset->id)->where('action', 'update')->count();
+    //     $deleteCount = History::where('asset_id', $asset->id)->where('action', 'delete')->count();
+    //     $histories = History::where('asset_id', $asset->id)->orderBy('created_at', 'desc')->get();
+    //     $dateInsert = $histories->where('action', 'insert')->first()->created_at ?? $asset->created_at;
+    //     $dateDelete = $histories->where('action', 'delete')->first()->created_at ?? null;
+    //     $locationStatus = $asset->location;
 
-        return view('assets.detail', compact(
-            'asset',
-            'updateCount',
-            'deleteCount',
-            'histories',
-            'dateInsert',
-            'dateDelete',
-            'locationStatus'
-        ));
+        
+
+
+    //     return view('assets.detail', compact(
+    //         'asset',
+    //         'updateCount',
+    //         'deleteCount',
+    //         'histories',
+    //         'dateInsert',
+    //         'dateDelete',
+    //         'locationStatus'
+    //     ));
+    // }
+
+    // AssetController.php
+
+public function detail($id)
+{
+    $asset = \App\Models\Asset::withTrashed()->find($id);
+
+    if (!$asset) {
+        // Asset tidak ditemukan atau sudah dihapus
+        return view('assets.detail', [
+            'asset' => null,
+            'updateCount' => 0,
+            'deleteCount' => 0,
+            'histories' => [],
+            'dateInsert' => null,
+            'dateDelete' => null,
+            'locationStatus' => null,
+            'errorMessage' => 'Asset tidak ditemukan atau sudah dihapus.'
+        ]);
     }
+
+    $updateCount = \App\Models\History::where('asset_id', $asset->id)->where('action', 'update')->count();
+    $deleteCount = \App\Models\History::where('asset_id', $asset->id)->where('action', 'delete')->count();
+    $histories = \App\Models\History::where('asset_id', $asset->id)->orderBy('created_at', 'desc')->get();
+    $dateInsert = $histories->where('action', 'insert')->first()->created_at ?? $asset->created_at;
+    $dateDelete = $histories->where('action', 'delete')->first()->created_at ?? null;
+    $locationStatus = $asset->location;
+
+    return view('assets.detail', compact(
+        'asset',
+        'updateCount',
+        'deleteCount',
+        'histories',
+        'dateInsert',
+        'dateDelete',
+        'locationStatus'
+    ));
+}
+
 
     public function show(Asset $asset)
     {
@@ -210,4 +287,6 @@ class AssetController extends Controller
             'locationStatus'
         ));
     }
+
+    
 }

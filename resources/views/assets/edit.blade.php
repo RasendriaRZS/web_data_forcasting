@@ -61,6 +61,14 @@
             .modal-dialog {
                 max-width: 50%; /* Lebar maksimum modal lebih besar */
             }
+
+            .input-readonly {
+    background-color: #f1f1f1 !important;
+    color: #8a8a8a !important;
+    cursor: not-allowed !important;
+    opacity: 0.85;
+}
+
         </style>
     </head>
     <body>
@@ -83,7 +91,11 @@
                                 <!-- Serial Number -->
                                 <div class="col-md-6">
                                     <label for="serial_number" class="form-label">Serial Number</label>
-                                    <input type="text" name="serial_number" id="serial_number" class="form-control shadow-sm" value="{{ $asset->serial_number }}" required />
+                                   <input type="text" name="serial_number" id="serial_number"
+    class="form-control shadow-sm input-readonly"
+    value="{{ $asset->serial_number }}" required readonly />
+<small class="text-muted">Serial number tidak dapat diubah.</small>
+
                                 </div>
 
                                 <!-- Name -->

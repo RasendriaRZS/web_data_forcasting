@@ -74,8 +74,11 @@
                         @forelse($assets as $asset)
                         <tr>
                             <td>
-                                <a href="{{ route('assets.detail', $asset->id) }}" class="sn-modern-link">{{ $asset->serial_number }}</a>
-                            </td>
+    <span class="fw-semibold text-dark" style="font-family:'JetBrains Mono',monospace;font-size:1rem;">
+        {{ $asset->serial_number }}
+    </span>
+</td>
+
                             <td>{{ $asset->name }}</td>
                             <td>
                                 <span class="badge bg-light text-dark border border-1 px-3 py-2 shadow-sm">{{ $asset->model }}</span>
