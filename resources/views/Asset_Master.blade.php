@@ -39,7 +39,10 @@
     </div>
 
     <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-0">
+                 <!-- Scrollbar horizontal atas -->
+        <div id="top-scroll" class="top-scrollbar mb-1" style="overflow-x:auto; overflow-y:hidden; height:18px;">
+            <div style="height:1px; min-width:1100px;"></div>
+        </div>
             <div class="table-responsive rounded-4" style="overflow-x:auto;">
                 <table class="table align-middle mb-0" style="font-size:1.10rem;min-width:1250px;">
                     <thead style="background:linear-gradient(90deg,#2563eb 0%,#60a5fa 100%);color:#fff;">
@@ -124,10 +127,14 @@
                 </table>
             </div>
         </div>
-        <div class="card-footer bg-white border-0 py-3">
-            <div class="d-flex justify-content-center">
-                {{ $assets->links() }}
+
+        <div class="card-footer bg-white border-0 py-4">
+            <div class="text-center text-muted mb-2" style="font-size:1rem;">
+                Halaman {{ $assets->currentPage() }} dari {{ $assets->lastPage() }} | Total: {{ $assets->total() }}
             </div>
+            <nav aria-label="Asset Master Pagination" class="d-flex justify-content-center">
+                {{ $assets->onEachSide(1)->links() }}
+            </nav>
         </div>
     </div>
 </div>
@@ -209,5 +216,70 @@ h1, .fw-bold {
         min-width: 100vw;
     }
 }
+
+.pagination .page-link {
+    color: #2563eb;
+    border-radius: 0.6rem !important;
+    margin: 0 0.15rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+.pagination .page-link:focus, .pagination .page-link:hover {
+    background: #e0e7ff;
+    color: #1e40af;
+}
+.pagination .active .page-link {
+    background: linear-gradient(90deg,#2563eb 0%,#60a5fa 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+
+  .top-scrollbar {
+    background: #f8fafc;
+    border-radius: 0.7rem 0.7rem 0 0;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.07);
+    scrollbar-width: thin;
+    scrollbar-color: #2563eb #e0e7ff;
+}
+.top-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    background: #e0e7ff;
+    border-radius: 8px;
+}
+.top-scrollbar::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 8px;
+}
+.table-responsive {
+    border-radius: 0 0 1.1rem 1.1rem;
+}
 </style>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const topScroll = document.getElementById('top-scroll');
+    const tableScroll = document.querySelector('.table-responsive');
+
+    // Sinkron scroll atas ke bawah
+    topScroll.addEventListener('scroll', function() {
+        tableScroll.scrollLeft = topScroll.scrollLeft;
+    });
+
+    // Sinkron scroll bawah ke atas
+    tableScroll.addEventListener('scroll', function() {
+        topScroll.scrollLeft = tableScroll.scrollLeft;
+    });
+
+    // Set lebar scrollbar atas sesuai tabel
+    function syncScrollWidth() {
+        const table = tableScroll.querySelector('table');
+        topScroll.firstElementChild.style.width = table.offsetWidth + 'px';
+    }
+    syncScrollWidth();
+    window.addEventListener('resize', syncScrollWidth);
+    });
+
+</script>
+
 @endsection

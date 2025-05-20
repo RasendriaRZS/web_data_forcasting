@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Asset;
 use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
         $view->with('maintenanceModels', $maintenanceModels);
     });
+    Paginator::useBootstrapFive();
     }
 }
