@@ -42,18 +42,18 @@
     <form id="filterForm" method="GET" action="{{ route('analytics') }}" class="mb-4">
         <div class="row g-2 align-items-end">
             <div class="col-md-3">
-                <label class="form-label fw-semibold text-secondary">Tahun Awal</label>
+                <label class="form-label fw-semibold text-secondary">Start Year</label>
                 <select name="start_year" class="form-select shadow-sm">
-                    <option value="">Pilih Tahun Awal</option>
+                    <option value="">Select Start Year</option>
                     @foreach($years as $year)
                         <option value="{{ $year }}" {{ request('start_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold text-secondary">Tahun Akhir</label>
+                <label class="form-label fw-semibold text-secondary">End Year</label>
                 <select name="end_year" class="form-select shadow-sm">
-                    <option value="">Pilih Tahun Akhir</option>
+                    <option value="">Select End Year</option>
                     @foreach($years as $year)
                         <option value="{{ $year }}" {{ request('end_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                     @endforeach

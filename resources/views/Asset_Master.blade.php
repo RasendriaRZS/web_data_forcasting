@@ -34,7 +34,7 @@
     <div class="d-flex align-items-center gap-2 mb-2">
         <span class="text-muted" style="font-size:0.98rem;">
             <i class="bi bi-arrow-right-circle me-1 animate-panah-kanan"></i>
-            Geser ke samping untuk melihat semua kolom tabel
+            Swipe sideways to see all table columns.
         </span>
     </div>
 
@@ -130,7 +130,7 @@
 
         <div class="card-footer bg-white border-0 py-4">
             <div class="text-center text-muted mb-2" style="font-size:1rem;">
-                Halaman {{ $assets->currentPage() }} dari {{ $assets->lastPage() }} | Total: {{ $assets->total() }}
+                Page {{ $assets->currentPage() }} from {{ $assets->lastPage() }} | Total: {{ $assets->total() }}
             </div>
             <nav aria-label="Asset Master Pagination" class="d-flex justify-content-center">
                 {{ $assets->onEachSide(1)->links() }}
