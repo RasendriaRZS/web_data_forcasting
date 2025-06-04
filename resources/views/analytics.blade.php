@@ -74,7 +74,7 @@
                 <i class="bi bi-graph-up text-primary" style="font-size:1.4rem;"></i>
                 <span class="fw-semibold text-secondary" style="font-size:1.1rem;">Asset Analytics Chart</span>
             </div>
-            <canvas id="analyticsChart" height="220"></canvas>
+            <canvas id="analyticsChart" height="100"></canvas>
         </div>
     </div>
 </div>
