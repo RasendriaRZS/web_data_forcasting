@@ -10,34 +10,6 @@
         <div class="text-muted mb-2" style="font-size:1.1rem;">Predicting Asset Needs & Trends</div>
     </div>
 
-    {{-- <!-- Card Statistik -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-4 col-12">
-            <div class="card shadow-sm border-0 rounded-4 text-center py-3">
-                <div class="fw-semibold text-secondary mb-1">Total Asset</div>
-                <div class="fw-bold text-primary" style="font-size:2rem;">
-                    {{ $totalAsset ?? '-' }}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-12">
-            <div class="card shadow-sm border-0 rounded-4 text-center py-3">
-                <div class="fw-semibold text-secondary mb-1">Asset Growth</div>
-                <div class="fw-bold text-success" style="font-size:2rem;">
-                    {{ $growthPercent ?? '-' }}<span style="font-size:1.1rem;">%</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-12">
-            <div class="card shadow-sm border-0 rounded-4 text-center py-3">
-                <div class="fw-semibold text-secondary mb-1">Most Used Asset</div>
-                <div class="fw-bold text-dark" style="font-size:1.3rem;">
-                    {{ $mostUsedAsset ?? '-' }}
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
     <!-- Filter -->
     <form id="filterForm" method="GET" action="{{ route('analytics') }}" class="mb-4">
         <div class="row g-2 align-items-end">
@@ -77,13 +49,43 @@
             <canvas id="analyticsChart" height="100"></canvas>
         </div>
     </div>
+
+    <!-- Model Evaluation Metrics -->
+    <div class="card shadow-sm border-0 rounded-4 my-4 p-4">
+    <h5 class="fw-semibold text-secondary mb-3">Model Evaluation Metrics</h5>
+    @if(is_null($mae) || is_null($rmse) || is_null($mape))
+        <p class="text-muted fst-italic">Data tidak cukup untuk melakukan evaluasi model.</p>
+    @else
+        <ul class="list-group list-group-flush" style="font-size:1.1rem;">
+            <li class="list-group-item">Mean Absolute Error (MAE): <strong>{{ number_format($mae, 4) }}</strong></li>
+            <li class="list-group-item">Root Mean Squared Error (RMSE): <strong>{{ number_format($rmse, 4) }}</strong></li>
+            <li class="list-group-item">Mean Absolute Percentage Error (MAPE): <strong>{{ number_format($mape, 2) }}%</strong></li>
+        </ul>
+    @endif
+</div>
+
+    <!-- Devices in Maintenance -->
+    <div class="card shadow-sm border-0 rounded-4 my-4 p-4">
+        <h5 class="fw-semibold text-secondary mb-3">Devices in Maintenance</h5>
+        @if($maintenanceModels->isEmpty())
+            <p class="text-muted">No devices currently in maintenance.</p>
+        @else
+            <ul class="list-group list-group-flush">
+                @foreach($maintenanceModels as $device)
+                    <li class="list-group-item">
+                        {{ $device->name ?? 'Unnamed Device' }} - Purchased: {{ \Carbon\Carbon::parse($device->purchase_date)->format('Y-m-d') }}
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     let analyticsChart = null;
 
-    function initChart(labels, historicalValues, probabilityValues) {
+    function initChart(labels, historicalValues, predictionValues) {
         const ctx = document.getElementById('analyticsChart').getContext('2d');
         
         if (analyticsChart) {
@@ -104,8 +106,8 @@
                         tension: 0.4
                     },
                     {
-                        label: 'Probabilities',
-                        data: probabilityValues,
+                        label: 'Predictions',
+                        data: predictionValues,
                         borderColor: '#ffc107',
                         backgroundColor: 'rgba(255, 193, 7, 0.12)',
                         borderWidth: 2,
@@ -135,12 +137,12 @@
 
     // Data dari controller
     const historicalData = @json($data);
-    const probabilities = @json($probabilities);
+    const predictions = @json($predictions);
 
     // Gabungkan semua tahun dan urutkan
     const labels = [...new Set([
         ...historicalData.map(item => item.year),
-        ...probabilities.map(item => item.year)
+        ...predictions.map(item => item.year)
     ])].sort((a, b) => a - b);
 
     // Mapping nilai untuk setiap tahun
@@ -149,13 +151,13 @@
         return item ? item.value : null;
     });
 
-    const probabilityValues = labels.map(year => {
-        const item = probabilities.find(d => d.year === year);
+    const predictionValues = labels.map(year => {
+        const item = predictions.find(d => d.year === year);
         return item ? item.value : null;
     });
 
     // Inisialisasi chart
-    initChart(labels, historicalValues, probabilityValues);
+    initChart(labels, historicalValues, predictionValues);
 </script>
 
 <style>
