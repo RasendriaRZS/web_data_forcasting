@@ -30,7 +30,7 @@ class AssetController extends Controller
         }
 
         // $assets = $query->orderBy('updated_at', 'desc')->with('transactions')->get();
-        $assets = $query->orderBy('updated_at', 'desc')->with('transactions')->paginate(15);
+        $assets = $query->orderBy('updated_at', 'desc')->with('transactions')->paginate(15); 
         $maintenanceModels = Asset::where('status', 'Maintenance')->get();
 
         return view('assets.index', compact('assets', 'maintenanceModels'));
