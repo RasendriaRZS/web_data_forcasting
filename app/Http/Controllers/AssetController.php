@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Asset;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -289,5 +290,81 @@ public function detail($id)
         ));
     }
 
-    
+    public function importForm()
+{
+    return view('assets.import');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'csv_file' => 'required|file|mimes:csv,txt',
+    ]);
+
+    $path = $request->file('csv_file')->getRealPath();
+    $data = array_map('str_getcsv', file($path));
+    $header = array_map('strtolower', $data[0]); // lowercase untuk konsistensi
+
+    unset($data[0]); // hapus header
+
+    foreach ($data as $row) {
+        $rowData = array_combine($header, $row);
+
+        // Validasi data tiap baris jika perlu
+        $validator = Validator::make($rowData, [
+            'serial_number' => 'required|unique:assets,serial_number',
+            'name' => 'required',
+            'model' => 'required',
+            'status' => 'required',
+            'purchase_date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+        continue;
+        }
+
+        // Simpan asset
+        $asset = Asset::create([
+            'serial_number' => $rowData['serial_number'],
+            'name' => $rowData['name'],
+            'model' => $rowData['model'],
+            'status' => $rowData['status'],
+            'purchase_date' => $rowData['purchase_date'],
+            'delivery_date' => $rowData['delivery_date'] ?? null,
+            'project_name' => $rowData['project_name'] ?? null,
+            'location' => $rowData['location'] ?? null,
+            'notes' => $rowData['notes'] ?? null,
+        ]);
+
+        // Buat entri master dan history juga, seperti di `store()`
+        AssetMaster::firstOrCreate(
+            ['serial_number' => $rowData['serial_number']],
+            [
+                'name' => $rowData['name'],
+                'project_name' => $rowData['project_name'] ?? null,
+                'model' => $rowData['model'],
+                'status' => $rowData['status'],
+                'asset_recieved' => $rowData['purchase_date'],
+                'asset_shipped' => $rowData['delivery_date'] ?? null,
+                'location' => $rowData['location'] ?? null,
+                'notes' => $rowData['notes'] ?? null,
+                'id_insert' => auth()->id() ?? null,
+                'date_insert' => now(),
+                'is_delete' => 0
+            ]
+        );
+
+        History::create([
+            'year'        => now()->year,
+            'value'       => $asset->value ?? 0,
+            'asset_id'    => $asset->id,
+            'action'      => 'insert',
+            'description' => 'Imported via CSV',
+            'user_id'     => auth()->id(),
+        ]);
+    }
+
+    return redirect()->route('assets.index')->with('success', 'CSV import completed successfully!');
+}
+
 }

@@ -55,14 +55,21 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-    }
+protected function create(array $data)
+{
+    return User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make($data['password']),
+        'department' => $data['department'],  // tambahkan field department
+        'phone' => $data['phone'],            // tambahkan field phone
+    ]);
+}
+
+
+protected $fillable = [
+    'name', 'email', 'password', 'department', 'phone',
+];
 
     protected function validator(array $data)
     {

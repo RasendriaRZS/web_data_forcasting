@@ -5,6 +5,20 @@
     <h1 class="fw-bold mb-4" style="font-size:2.2rem;letter-spacing:0.01em;color:#1e293b;">
         <i class="bi bi-box-seam me-2 text-primary"></i> Asset Management
     </h1>
+    
+<div class="container mb-4">
+    <h2>Import Assets via CSV</h2>
+    <form action="{{ route('assets.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="csv_file">Upload CSV File:</label>
+            <input type="file" name="csv_file" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Import</button>
+    </form>
+</div>
+
+
 
     <!-- Tombol Create dan Search/Filter -->
     <div class="row align-items-center mb-4 g-3">
