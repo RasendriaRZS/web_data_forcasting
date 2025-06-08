@@ -82,6 +82,10 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get('assets/{asset}/detail', [AssetController::class, 'detail'])->name('assets.detail');
 Route::resource('Asset_Master', AssetMasterController::class)->only(['index', 'show']);
 
+Route::get('/assets/import', [AssetController::class, 'importForm'])->name('assets.importForm');
+Route::post('/assets/import', [AssetController::class, 'import'])->name('assets.import');
+
+
 
 // mevement transaction 
 // Route::get('assets/{asset}/detail', [AssetController::class, 'detail'])->name('assets.detail');
