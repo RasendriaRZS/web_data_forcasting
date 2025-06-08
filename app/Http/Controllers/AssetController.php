@@ -320,7 +320,7 @@ public function import(Request $request)
         ]);
 
         if ($validator->fails()) {
-            continue; // Lewati jika validasi gagal
+        continue;
         }
 
         // Simpan asset

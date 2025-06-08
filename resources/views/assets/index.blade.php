@@ -6,7 +6,7 @@
         <i class="bi bi-box-seam me-2 text-primary"></i> Asset Management
     </h1>
     
-<div class="container">
+<div class="container mb-4">
     <h2>Import Assets via CSV</h2>
     <form action="{{ route('assets.import') }}" method="POST" enctype="multipart/form-data">
         @csrf
